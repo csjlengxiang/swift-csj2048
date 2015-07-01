@@ -9,7 +9,7 @@
 import UIKit
 
 class GridsView: UIView {
-    var bkGrids: [GridView] = []
+    var bkFrame: [CGRect] = []
     
     override init(frame: CGRect) {
         super.init(frame: frame)
@@ -24,9 +24,10 @@ class GridsView: UIView {
             for j in 0..<4 {
                 var y: CGFloat = mar + d / 2 + CGFloat(i) * (len + d)
                 var x: CGFloat = mar + d / 2 + CGFloat(j) * (len + d)
-                var grid = GridView(frame: CGRect(x: x, y: y, width: len, height: len))
-                grid.display(0, time: 0)
-                bkGrids.append(grid)
+                var frame = CGRect(x: x, y: y, width: len, height: len)
+                var grid = GridView(frame: frame)
+                grid.display(0, time: 1)
+                bkFrame.append(frame)
                 self.addSubview(grid)
             }
         }

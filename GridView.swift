@@ -21,6 +21,7 @@ class GridView: UIView {
     var lb: UILabel!
     override init(frame: CGRect) {
         super.init(frame: frame)
+        self.frame = frame
         self.layer.cornerRadius = width / 5
         self.backgroundColor = UIColor.clearColor()
         
@@ -100,6 +101,7 @@ extension GridView {
         self.lb.text = "\(value)"
         self.lb.textColor = getNumColor(value)
         self.backgroundColor = getBKColor(value)
+        
         self.transform = CGAffineTransformMakeScale(0.1, 0.1)
         UIView.animateWithDuration(time / 2, animations: { () -> Void in
             self.transform = CGAffineTransformMakeScale(1.12, 1.12)

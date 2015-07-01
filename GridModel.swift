@@ -8,44 +8,38 @@
 
 import Foundation
 
-class Gird: NSObject {
+class Gird {
     var view: GridView!
     var num: Int
-    var x: Int
-    var y: Int
-    var pos: Int {
-        get {
-            return x * 4 + y
-        }
-        set {
-            x = newValue / 4
-            y = newValue % 4
-        }
-    }
-    init (num: Int, x: Int, y: Int){
-        self.num = num
-        self.x = x
-        self.y = y
-    }
+    var pos: Int
     init (num: Int, pos: Int){
         self.num = num
-        self.x = pos / 4
-        self.y = pos % 4
+        self.pos = pos
     }
 }
+/**
+*  根据Change的start和end更新girds中两个girds的信息
+*  注意girds是早就已经存在，我们只是相应的按照模拟的方法移动，因为我们在消失是直接采用gird让其消失，于是gird要保持一致，不能交换内容，要交换指向gird的地址
+*/
 struct Change {
     var start: Int
     var end: Int
-    var gird: Gird
     var view: GridView
 }
+/**
+*  根据New的内容嵌入至gird，并加入view
+*/
 struct New {
     var num: Int
     var pos: Int
-    //var gird: Gird
 }
+/**
+*  根据Disa的内容将gird清空，并清空view
+*/
 struct Disa {
+    // 此处本想用pos来跟上面统一，但是有个很大的问题是，pos后来变了
     var gird: Gird
+    //var pos: Int
     var view: GridView
 }
 
@@ -55,14 +49,11 @@ enum Dir {
     case Left
     case Right
 }
-class Girds16: NSObject {
-    
+class Girds16 {
     var grids: [Gird] = {
         var ret: [Gird] = []
-        for x in 0..<4 {
-            for y in 0..<4 {
-                ret.append(Gird(num: 0, x: x, y: y))
-            }
+        for i in 0..<16 {
+            ret.append(Gird(num: 0, pos: i))
         }
         return ret
     }()
@@ -119,22 +110,28 @@ class Girds16: NSObject {
     }
     
     func getResult(dir: Dir){
+        getCheck(dir)
+        //pr()
+        updateModel()
+        //pr()
+        getAppear()
+        //pr()
+//        if !check() {
+//            println("游戏结束哟")
+//            //clearResult()
+//            return
+//        }
+    }
+    func getCheck(dir: Dir)->Bool {
         clearResult()
         var girdss = getStack(dir)
         for girds in girdss {
-            getResult1(girds: girds)
+            getResultByStack(girds: girds)
         }
-        
-        pr()
-        
-        updateModel()
-        
-        pr()
-        
-        getAppear()
-        
-    
-        // 根据模型来搞起
+        return changes.count > 0
+    }
+    func check()->Bool {
+        return getCheck(Dir.Down) || getCheck(Dir.Up) || getCheck(Dir.Left) || getCheck(Dir.Right)
     }
     
     func pr() {
@@ -149,24 +146,31 @@ class Girds16: NSObject {
         }
         println()
     }
+    /**
+    对于每一个栈，如何[2,0,2,0]得出:
+    1、移动的集合
+    2、消失的集合
+    3、出现的集合
     
-    func getResult1(girds a: [Gird]) {
+    :param: girds 栈
+    */
+    func getResultByStack(girds a: [Gird]) {
         var low = 0
         var cnt = a.count
         var tmp: Gird! = nil
         for var i = 0; i < cnt; i++ {
             if a[i].num != 0 {
                 if tmp == nil {
+                    if a[i].pos != a[low].pos {
+                        changes.append(Change(start: a[i].pos, end: a[low].pos, view: a[i].view))
+                    }
                     tmp = a[i]
-                    changes.append(Change(start: a[i].pos, end: a[low].pos, gird: a[i], view: a[i].view))
-                    
                 } else if tmp.num == a[i].num {
-                    changes.append(Change(start: a[i].pos, end: a[low].pos, gird: a[i], view: a[i].view))
+                    if a[i].pos != a[low].pos {
+                        changes.append(Change(start: a[i].pos, end: a[low].pos, view: a[i].view))
+                    }
                     var num = a[i].num * 2
                     news.append(New(num: num, pos: a[low].pos))
-                    
-                    println("\(num) \(a[low].pos)")
-                    
                     disas.append(Disa(gird: tmp, view: tmp.view))
                     disas.append(Disa(gird: a[i], view: a[i].view))
                     low++
@@ -183,12 +187,16 @@ class Girds16: NSObject {
     
     func updateModel() {
         for change in changes {
-            
             var tmp = grids[change.end]
             grids[change.end] = grids[change.start]
             grids[change.start] = tmp
             grids[change.end].pos = change.end
             grids[change.start].pos = change.start
+            //grids[change.start].num = 0 //其实不要这个也是可以的，因为disa给置0了
+              //移动到指定位置，原来的清空。上一种更节约内存
+//            grids[change.end] = grids[change.start]
+//            grids[change.end].pos = change.end
+//            grids[change.start] = Gird(num: 0, pos: change.start)
         }
         for disa in disas {
             disa.gird.num = 0
@@ -211,24 +219,18 @@ class Girds16: NSObject {
                 b.append(i)
             }
         }
-        var r = Int(arc4random() % (UInt32)(b.count))
-        
-        // MARK: 这里随机出现的数字
-        news.append(New(num: 2, pos: b[r]))
-        grids[b[r]].num = 2
-        
-        var cnt = 0
-        grids.map { (gird) -> Void in
-            if gird.num != 0 {
-                cnt++
-            }
+        if b.count != 0 {
+            var r = Int(arc4random() % (UInt32)(b.count))
+            // MARK: 这里随机出现的数字
+            news.append(New(num: 2, pos: b[r]))
+            grids[b[r]].num = 2
         }
-        
-        su = su - disas.count + news.count
-        println("ou \(su)")
-        println("in \(cnt)")
     }
-    var su = 0
+    
+    func getStart(){
+        getAppear()
+        getAppear()
+    }
     
     func clearResult(){
         changes.removeAll(keepCapacity: false)
