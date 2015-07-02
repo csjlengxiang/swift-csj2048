@@ -119,40 +119,19 @@ class Girds16 {
     
     func getResult(dir: Dir){
         getCheck(dir)
-        //pr()
         updateModel()
-        //pr()
         getAppear()
-        //pr()
-//        if !check() {
-//            println("游戏结束哟")
-//            //clearResult()
-//            return
-//        }
     }
     func getCheck(dir: Dir)->Bool {
         clearResult()
         var girdss = getStack(dir)
-        for girds in girdss {
-            getResultByStack(girds: girds)
+        girdss.map { (girds) -> Void in
+            self.getResultByStack(girds: girds)
         }
         return changes.count > 0
     }
     func check()->Bool {
         return getCheck(Dir.Down) || getCheck(Dir.Up) || getCheck(Dir.Left) || getCheck(Dir.Right)
-    }
-    
-    func pr() {
-        for i in 0..<4 {
-            for j in 0..<4 {
-                var grid: Gird = grids[i * 4 + j]
-                //var str: String = "(\(grid.num) \(grid.x) \(grid.y))"
-                var str: String = "\(grid.num) "
-                print(str)
-            }
-            println()
-        }
-        println()
     }
     /**
     对于每一个栈，如何[2,0,2,0]得出:
@@ -206,11 +185,11 @@ class Girds16 {
 //            grids[change.end].pos = change.end
 //            grids[change.start] = Gird(num: 0, pos: change.start)
         }
-        for disa in disas {
+        disas.map { (disa) -> Void in
             disa.gird.num = 0
         }
-        for new in news {
-            grids[new.pos].num = new.num
+        news.map { (new) -> Void in
+            self.grids[new.pos].num = new.num
         }
     }
     

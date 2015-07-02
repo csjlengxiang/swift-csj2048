@@ -26,15 +26,10 @@ class GridView: UIView {
         self.backgroundColor = UIColor.clearColor()
         
         lb = UILabel()
-        
         lb.frame = CGRect(x: 0, y: 0, width: width, height: height)
-        
         lb.backgroundColor = UIColor.clearColor()
-        
         lb.textAlignment = NSTextAlignment.Center
-        
         lb.font = UIFont.systemFontOfSize(30)
-        
         self.addSubview(lb)
         
     }
