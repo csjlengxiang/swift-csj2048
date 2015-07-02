@@ -50,6 +50,14 @@ enum Dir {
     case Right
 }
 class Girds16 {
+    subscript(pos: Int) -> Gird {
+        get {
+            return grids[pos]
+        }
+        set {
+            grids[pos] = newValue
+        }
+    }
     var grids: [Gird] = {
         var ret: [Gird] = []
         for i in 0..<16 {

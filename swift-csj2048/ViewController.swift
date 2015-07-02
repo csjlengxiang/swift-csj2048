@@ -25,114 +25,164 @@ class ViewController: UIViewController {
         gridsView = GridsView(frame: CGRect(x: 10, y: 20, width: width - 20, height: width - 20))
         girds = Girds16()
         girds.getStart()
-        oper(time: 1)
+        gridsView.animation(girds, time: 1.0)
         
         self.view.addSubview(gridsView)
-        var btn = UIButton(frame: CGRect(x: 0, y: 400, width: 100, height: 100))
-        btn.setTitle("click1-up", forState: UIControlState.Normal)
-        btn.addTarget(self, action: "clicked1:", forControlEvents: UIControlEvents.TouchUpInside)
         
-        btn.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
+//        var btn = UIButton(frame: CGRect(x: 0, y: 400, width: 100, height: 100))
+//        btn.setTitle("click1-up", forState: UIControlState.Normal)
+//        btn.addTarget(self, action: "clicked1:", forControlEvents: UIControlEvents.TouchUpInside)
+//        
+//        btn.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
+//        
+//        self.view.addSubview(btn)
+//        
+//        
+//        btn = UIButton(frame: CGRect(x: 0, y: 500, width: 100, height: 100))
+//        btn.setTitle("click2-down", forState: UIControlState.Normal)
+//        btn.addTarget(self, action: "clicked2:", forControlEvents: UIControlEvents.TouchUpInside)
+//        
+//        btn.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
+//        
+//        self.view.addSubview(btn)
+//        
+//        btn = UIButton(frame: CGRect(x: 100, y: 400, width: 100, height: 100))
+//        btn.setTitle("click3-left", forState: UIControlState.Normal)
+//        btn.addTarget(self, action: "clicked3:", forControlEvents: UIControlEvents.TouchUpInside)
+//        
+//        btn.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
+//        
+//        self.view.addSubview(btn)
+//        
+//        btn = UIButton(frame: CGRect(x: 100, y: 500, width: 100, height: 100))
+//        btn.setTitle("click3-right", forState: UIControlState.Normal)
+//        btn.addTarget(self, action: "clicked4:", forControlEvents: UIControlEvents.TouchUpInside)
+//        
+//        btn.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
+//        
+//        self.view.addSubview(btn)
         
-        self.view.addSubview(btn)
+        var recognizer = UISwipeGestureRecognizer(target: self, action: "oper:")
+        recognizer.direction = UISwipeGestureRecognizerDirection.Down
+        self.view.addGestureRecognizer(recognizer)
+        
+        recognizer = UISwipeGestureRecognizer(target: self, action: "oper:")
+        recognizer.direction = UISwipeGestureRecognizerDirection.Up
+        self.view.addGestureRecognizer(recognizer)
+        
+        recognizer = UISwipeGestureRecognizer(target: self, action: "oper:")
+        recognizer.direction = UISwipeGestureRecognizerDirection.Left
+        self.view.addGestureRecognizer(recognizer)
+        
+        recognizer = UISwipeGestureRecognizer(target: self, action: "oper:")
+        recognizer.direction = UISwipeGestureRecognizerDirection.Right
+        self.view.addGestureRecognizer(recognizer)
         
         
-        btn = UIButton(frame: CGRect(x: 0, y: 500, width: 100, height: 100))
-        btn.setTitle("click2-down", forState: UIControlState.Normal)
-        btn.addTarget(self, action: "clicked2:", forControlEvents: UIControlEvents.TouchUpInside)
+//        [recognizer setDirection:(UISwipeGestureRecognizerDirectionRight)];
+//        [[self view] addGestureRecognizer:recognizer];
+//        [recognizer release];
+//        recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom:)];
+//        
+//        [recognizer setDirection:(UISwipeGestureRecognizerDirectionLeft)];
+//        [[self view] addGestureRecognizer:recognizer];
+//        [recognizer release];
+//        recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom:)];
+//        
+//        [recognizer setDirection:(UISwipeGestureRecognizerDirectionUp)];
+//        [[self view] addGestureRecognizer:recognizer];
+//        [recognizer release];
+//        
+//        
+//        UISwipeGestureRecognizer *recognizer;
+//        
+//        recognizer = [[UISwipeGestureRecognizer alloc]initWithTarget:self action:@selector(handleSwipeFrom:)];
+//        [recognizer setDirection:(UISwipeGestureRecognizerDirectionDown)];
+//        [[self view] addGestureRecognizer:recognizer];
+//        [recognizer release];
+
         
-        btn.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-        
-        self.view.addSubview(btn)
-        
-        btn = UIButton(frame: CGRect(x: 100, y: 400, width: 100, height: 100))
-        btn.setTitle("click3-left", forState: UIControlState.Normal)
-        btn.addTarget(self, action: "clicked3:", forControlEvents: UIControlEvents.TouchUpInside)
-        
-        btn.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-        
-        self.view.addSubview(btn)
-        
-        btn = UIButton(frame: CGRect(x: 100, y: 500, width: 100, height: 100))
-        btn.setTitle("click3-right", forState: UIControlState.Normal)
-        btn.addTarget(self, action: "clicked4:", forControlEvents: UIControlEvents.TouchUpInside)
-        
-        btn.setTitleColor(UIColor.blackColor(), forState: UIControlState.Normal)
-        
-        self.view.addSubview(btn)
     }
     
-    func clicked1(sender: AnyObject){
+    func clicked1(sender: AnyObject?){
         girds.getResult(Dir.Up)
-        oper()
+        gridsView.animation(girds)
         if !girds.check() {
             println("游戏结束了哟")
+            let alertView = UIAlertView()
+            alertView.title = "Defeat"
+            alertView.message = "You lost..."
+            alertView.addButtonWithTitle("Cancel")
+            alertView.show()
         }
     }
-    func clicked2(sender: AnyObject){
+    func clicked2(sender: AnyObject?){
         
         girds.getResult(Dir.Down)
-        oper()
+        gridsView.animation(girds)
         
         if !girds.check() {
             println("游戏结束了哟")
+            let alertView = UIAlertView()
+            alertView.title = "Defeat"
+            alertView.message = "You lost..."
+            alertView.addButtonWithTitle("Cancel")
+            alertView.show()
         }
     }
-    func clicked3(sender: AnyObject){
+    func clicked3(sender: AnyObject?){
         
         girds.getResult(Dir.Left)
-        oper()
+        gridsView.animation(girds)
         
         if !girds.check() {
             println("游戏结束了哟")
+            let alertView = UIAlertView()
+            alertView.title = "Defeat"
+            alertView.message = "You lost..."
+            alertView.addButtonWithTitle("Cancel")
+            alertView.show()
         }
     }
-    func clicked4(sender: AnyObject){
+    func clicked4(sender: AnyObject?){
         
         girds.getResult(Dir.Right)
-        oper()
+        gridsView.animation(girds)
         
         if !girds.check() {
             println("游戏结束了哟")
+            let alertView = UIAlertView()
+            alertView.title = "Defeat"
+            alertView.message = "You lost..."
+            alertView.addButtonWithTitle("Cancel")
+            alertView.show()
         }
     }
-    func oper(time tm: NSTimeInterval = 0.3) {
-        var changes = girds.changes
-        
-        var disas = girds.disas
-        
-        var news = girds.news
-        // 提前生成nviews, 这个是为了消除快速点击view还没跟上的bug
-        var nviews = [(GridView, Int)]()
-        for new in news {
-            var nview = GridView(frame: self.gridsView.bkFrame[new.pos])
-            self.girds.grids[new.pos].view = nview
-            self.gridsView.addSubview(nview)
-            nviews.append((nview, new.num))
+    
+    func oper(sender: UISwipeGestureRecognizer){
+        //划动的方向
+        var direction = sender.direction
+        //判断是上下左右
+        switch (direction){
+        case UISwipeGestureRecognizerDirection.Left:
+            println("Left")
+            clicked3(nil)
+            break
+        case UISwipeGestureRecognizerDirection.Right:
+            println("Right")
+            clicked4(nil)
+            break
+        case UISwipeGestureRecognizerDirection.Up:
+            println("Up")
+            clicked1(nil)
+            break
+        case UISwipeGestureRecognizerDirection.Down:
+            println("Down")
+            clicked2(nil)
+            break
+        default:
+            break;
         }
-        
-        for change in changes {
-            var x: CGFloat =  gridsView.bkFrame[change.end].origin.x + gridsView.bkFrame[change.end].size.width / 2.0
-            var y: CGFloat =  gridsView.bkFrame[change.end].origin.y + gridsView.bkFrame[change.end].size.height / 2.0
-            var center = CGPoint(x: x, y: y)
-            change.view.moveToCenter(tm, center: center)
-        }
-        // 异步形成动画
-        var nanoSeconds = Int64(tm * Double(NSEC_PER_SEC))
-        // 当没有移动，直接出现
-        if changes.count == 0 {
-            nanoSeconds = Int64(0)
-        }
-        let time = dispatch_time(DISPATCH_TIME_NOW, nanoSeconds)
-        dispatch_after(time, dispatch_get_main_queue(), {
-            () -> Void in
-            for disa in disas {
-                disa.view.disappear()
-            }
-            for nview in nviews {
-                nview.0.display(nview.1, time: tm)
-            }
-        })        
     }
 }
 
