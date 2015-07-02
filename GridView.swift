@@ -21,7 +21,6 @@ class GridView: UIView {
     var lb: UILabel!
     override init(frame: CGRect) {
         super.init(frame: frame)
-        self.frame = frame
         self.layer.cornerRadius = width / 5
         self.backgroundColor = UIColor.clearColor()
         
