@@ -9,7 +9,7 @@
 import Foundation
 
 class Gird {
-    var view: GridView!
+    weak var view: GridView!
     var num: Int
     var pos: Int
     init (num: Int, pos: Int){
@@ -50,31 +50,23 @@ enum Dir {
     case Right
 }
 class Girds16 {
-    subscript(pos: Int) -> Gird {
-        get {
-            return grids[pos]
-        }
-        set {
-            grids[pos] = newValue
-        }
-    }
-    var grids: [Gird] = {
+    private var grids: [Gird] = {
         var ret: [Gird] = []
         for i in 0..<16 {
             ret.append(Gird(num: 0, pos: i))
         }
         return ret
     }()
-    var changes: [Change] = []
-    var news: [New] = []
-    var disas: [Disa] = []
+    private var changes: [Change] = []
+    private var news: [New] = []
+    private var disas: [Disa] = []
     
     /**
     根据手势方向准备栈数据
     
     :returns: 返回栈数据
     */
-    func getStack(dir: Dir)->[[Gird]]{
+    private func getStack(dir: Dir)->[[Gird]]{
         var ret: [[Gird]] = []
         switch dir {
         case Dir.Up:
@@ -117,12 +109,14 @@ class Girds16 {
         return ret
     }
     
-    func getResult(dir: Dir){
-        getCheck(dir)
-        updateModel()
-        getAppear()
-    }
-    func getCheck(dir: Dir)->Bool {
+    /**
+    如果某个方向有change，说明还可以继续
+    
+    :param: dir 方向
+    
+    :returns: 是否可继续
+    */
+    private func getCheck(dir: Dir)->Bool {
         clearResult()
         var girdss = getStack(dir)
         girdss.map { (girds) -> Void in
@@ -134,14 +128,14 @@ class Girds16 {
         return getCheck(Dir.Down) || getCheck(Dir.Up) || getCheck(Dir.Left) || getCheck(Dir.Right)
     }
     /**
-    对于每一个栈，如何[2,0,2,0]得出:
+    对于每一个栈[2,0,2,0]，如何得出: (核心算法)
     1、移动的集合
     2、消失的集合
     3、出现的集合
     
     :param: girds 栈
     */
-    func getResultByStack(girds a: [Gird]) {
+    private func getResultByStack(girds a: [Gird]) {
         var low = 0
         var cnt = a.count
         var tmp: Gird! = nil
@@ -172,7 +166,10 @@ class Girds16 {
         }
     }
     
-    func updateModel() {
+    /**
+    只有更新了模型才能获得新出现的位置
+    */
+    private func updateModel() {
         for change in changes {
             var tmp = grids[change.end]
             grids[change.end] = grids[change.start]
@@ -192,8 +189,10 @@ class Girds16 {
             self.grids[new.pos].num = new.num
         }
     }
-    
-    func getAppear() {
+    /**
+    更新模型后，获得新出现的位置，并更新模型
+    */
+    private func getAppear() {
         var a: [Bool] = [Bool](count: 16, repeatedValue: false)
         grids.map { (grid) -> Void in
             if grid.num != 0 {
@@ -214,14 +213,31 @@ class Girds16 {
         }
     }
     
-    func getStart(){
-        getAppear()
-        getAppear()
-    }
-    
-    func clearResult(){
+    private func clearResult(){
         changes.removeAll(keepCapacity: false)
         news.removeAll(keepCapacity: false)
         disas.removeAll(keepCapacity: false)
+    }
+}
+// MARK: - Public func
+extension Girds16{
+    subscript(pos: Int) -> Gird {
+        get {
+            return grids[pos]
+        }
+        set {
+            grids[pos] = newValue
+        }
+    }
+    func getStart()->[New]{
+        getAppear()
+        getAppear()
+        return self.news
+    }
+    func getResult(dir: Dir)->([Change], [New], [Disa]){
+        getCheck(dir)
+        updateModel()
+        getAppear()
+        return (changes, news, disas)
     }
 }

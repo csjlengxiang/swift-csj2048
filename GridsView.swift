@@ -45,12 +45,9 @@ extension GridsView{
     :param: girds 模型
     :param: time  时间
     */
-    func animation(girds: Girds16, time tm: NSTimeInterval = 0.3) {
-        var changes = girds.changes
-        var disas = girds.disas
-        var nviews = perpare(girds.news, girds: girds)
-        changeAnimation(girds.changes, time: tm)
-        displayAnimation(girds, disas: disas, nviews: nviews, time: tm)
+    func animation(changes: [Change], disas: [Disa], nviews: [(GridView, Int)], time tm: NSTimeInterval = 0.3) {
+        changeAnimation(changes, time: tm)
+        displayAnimation(changes.count, disas: disas, nviews: nviews, time: tm)
     }
     
     func changeAnimation(changes: [Change], time tm: NSTimeInterval) {
@@ -62,8 +59,8 @@ extension GridsView{
         }
     }
     
-    func displayAnimation(girds: Girds16, disas: [Disa], nviews: [(GridView, Int)], time tm: NSTimeInterval){
-        var dis_time = getChangeAnimationTime(time: tm, count: girds.changes.count)
+    func displayAnimation(count: Int, disas: [Disa], nviews: [(GridView, Int)], time tm: NSTimeInterval){
+        var dis_time = getChangeAnimationTime(time: tm, count: count)
         dispatch_after(dis_time, dispatch_get_main_queue(), {
             () -> Void in
             for disa in disas {
@@ -74,25 +71,7 @@ extension GridsView{
             }
         })
     }
-    /**
-    准备动画数据，其实就是new要生成一些view，并绑定到model，提早准备好数据防bug
-    
-    :param: news  new
-    :param: girds 模型
-    
-    :returns: 返回元组用于动画
-    */
-    func perpare(news: [New], girds: Girds16) -> [(GridView, Int)] {
-        // 提前生成nviews, 这个是为了消除快速点击view还没跟上的bug
-        var nviews = [(GridView, Int)]()
-        for new in news {
-            var nview = GridView(frame: self.bkFrame[new.pos])
-            girds[new.pos].view = nview
-            self.addSubview(nview)
-            nviews.append((nview, new.num))
-        }
-        return nviews
-    }
+
     func getChangeAnimationTime(time tm: NSTimeInterval, count: Int) -> dispatch_time_t {
         var nanoSeconds = Int64(tm * Double(NSEC_PER_SEC))
         if count == 0 {

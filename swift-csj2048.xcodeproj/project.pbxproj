@@ -32,7 +32,7 @@
 		64B21B0F1B4239DA00D320C3 /* swift-csj2048.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "swift-csj2048.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		64B21B131B4239DA00D320C3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		64B21B141B4239DA00D320C3 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		64B21B161B4239DA00D320C3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		64B21B161B4239DA00D320C3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ViewController.swift; path = "swift-csj2048/ViewController.swift"; sourceTree = "<group>"; };
 		64B21B191B4239DA00D320C3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		64B21B1B1B4239DA00D320C3 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		64B21B1E1B4239DA00D320C3 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -65,6 +65,7 @@
 		64B21B061B4239DA00D320C3 = {
 			isa = PBXGroup;
 			children = (
+				64D3754B1B497CC100085483 /* controller */,
 				64B21B3A1B42BAA200D320C3 /* view */,
 				64B21B341B4239E500D320C3 /* model */,
 				64B21B111B4239DA00D320C3 /* swift-csj2048 */,
@@ -86,7 +87,6 @@
 			isa = PBXGroup;
 			children = (
 				64B21B141B4239DA00D320C3 /* AppDelegate.swift */,
-				64B21B161B4239DA00D320C3 /* ViewController.swift */,
 				64B21B181B4239DA00D320C3 /* Main.storyboard */,
 				64B21B1B1B4239DA00D320C3 /* Images.xcassets */,
 				64B21B1D1B4239DA00D320C3 /* LaunchScreen.xib */,
@@ -135,6 +135,14 @@
 				64B21B381B4295D600D320C3 /* GridsView.swift */,
 			);
 			name = view;
+			sourceTree = "<group>";
+		};
+		64D3754B1B497CC100085483 /* controller */ = {
+			isa = PBXGroup;
+			children = (
+				64B21B161B4239DA00D320C3 /* ViewController.swift */,
+			);
+			name = controller;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -437,6 +445,7 @@
 				64B21B301B4239DA00D320C3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		64B21B311B4239DA00D320C3 /* Build configuration list for PBXNativeTarget "swift-csj2048Tests" */ = {
 			isa = XCConfigurationList;
@@ -445,6 +454,7 @@
 				64B21B331B4239DA00D320C3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
