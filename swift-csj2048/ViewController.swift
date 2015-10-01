@@ -19,42 +19,26 @@ class ViewController: UIViewController {
     /**
     准备初始数据
     */
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        prepare()
+        prepareRecognizer()
+    }
+    
     func prepare(){
-        var width = UIScreen.mainScreen().applicationFrame.width
-        var heigth = UIScreen.mainScreen().applicationFrame.height
+        let width = UIScreen.mainScreen().applicationFrame.width
         gridsView = GridsView(frame: CGRect(x: 10, y: 20, width: width - 20, height: width - 20))
         girds = Girds16()
-        var news = girds.getStart()
-        var nviews = bandingNewDate(news)
+        let news = girds.getStart()
+        let nviews = bandingNewDate(news)
         gridsView.animation([], disas: [], nviews: nviews, time: 1.0)
         self.view.addSubview(gridsView)
     }
     
-    override func viewDidLoad() {
-        super.viewDidLoad()
-        
-        prepare()
-   
-        var recognizer = UISwipeGestureRecognizer(target: self, action: "oper:")
-        recognizer.direction = UISwipeGestureRecognizerDirection.Down
-        self.view.addGestureRecognizer(recognizer)
-        
-        recognizer = UISwipeGestureRecognizer(target: self, action: "oper:")
-        recognizer.direction = UISwipeGestureRecognizerDirection.Up
-        self.view.addGestureRecognizer(recognizer)
-        
-        recognizer = UISwipeGestureRecognizer(target: self, action: "oper:")
-        recognizer.direction = UISwipeGestureRecognizerDirection.Left
-        self.view.addGestureRecognizer(recognizer)
-        
-        recognizer = UISwipeGestureRecognizer(target: self, action: "oper:")
-        recognizer.direction = UISwipeGestureRecognizerDirection.Right
-        self.view.addGestureRecognizer(recognizer)
-    }
-    
     func check(){
         if !girds.check() {
-            println("游戏结束了哟")
+            print("游戏结束了哟")
             let alertView = UIAlertView()
             alertView.title = "Defeat"
             alertView.message = "You lost..."
@@ -79,15 +63,15 @@ class ViewController: UIViewController {
     /**
     准备动画数据，其实就是new要生成一些view，并绑定到model，提早准备好数据防bug
     
-    :param: news  new
-    :param: girds 模型
+    - parameter news:  new
+    - parameter girds: 模型
     
-    :returns: 返回元组用于动画
+    - returns: 返回元组用于动画
     */
     func bandingNewDate(news: [New]) -> [(GridView, Int)] {
         var nviews = [(GridView, Int)]()
         for new in news {
-            var nview = GridView(frame: self.gridsView.bkFrame[new.pos])
+            let nview = GridView(frame: self.gridsView.bkFrame[new.pos])
             girds[new.pos].view = nview
             self.gridsView.addSubview(nview)
             nviews.append((nview, new.num))
@@ -97,9 +81,27 @@ class ViewController: UIViewController {
     
     func oper(sender: UISwipeGestureRecognizer){
         let (changes, news, disas) = getAnimationDate(sender.direction)
-        var nviews = bandingNewDate(news)
+        let nviews = bandingNewDate(news)
         gridsView.animation(changes, disas: disas, nviews: nviews, time: 0.3)
         check()
+    }
+    
+    func prepareRecognizer() {
+        var recognizer = UISwipeGestureRecognizer(target: self, action: "oper:")
+        recognizer.direction = UISwipeGestureRecognizerDirection.Down
+        self.view.addGestureRecognizer(recognizer)
+        
+        recognizer = UISwipeGestureRecognizer(target: self, action: "oper:")
+        recognizer.direction = UISwipeGestureRecognizerDirection.Up
+        self.view.addGestureRecognizer(recognizer)
+        
+        recognizer = UISwipeGestureRecognizer(target: self, action: "oper:")
+        recognizer.direction = UISwipeGestureRecognizerDirection.Left
+        self.view.addGestureRecognizer(recognizer)
+        
+        recognizer = UISwipeGestureRecognizer(target: self, action: "oper:")
+        recognizer.direction = UISwipeGestureRecognizerDirection.Right
+        self.view.addGestureRecognizer(recognizer)
     }
 }
 

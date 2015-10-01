@@ -32,7 +32,7 @@ class GridView: UIView {
         self.addSubview(lb)
         
     }
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 }
@@ -76,8 +76,8 @@ extension GridView {
     /**
     移动中心到center位置，然后完成completion动作
     
-    :param: time       动画时间
-    :param: center     移动中心
+    - parameter time:       动画时间
+    - parameter center:     移动中心
     */
     func moveToCenter(time: NSTimeInterval, center: CGPoint){
         UIView.animateWithDuration(time, animations: { () -> Void in
@@ -88,8 +88,8 @@ extension GridView {
     /**
     显示
     
-    :param: value 数值
-    :param: time  动画时间
+    - parameter value: 数值
+    - parameter time:  动画时间
     */
     func display(value: Int, time: NSTimeInterval){
         self.lb.text = "\(value)"

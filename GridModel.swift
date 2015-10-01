@@ -64,7 +64,7 @@ class Girds16 {
     /**
     根据手势方向准备栈数据
     
-    :returns: 返回栈数据
+    - returns: 返回栈数据
     */
     private func getStack(dir: Dir)->[[Gird]]{
         var ret: [[Gird]] = []
@@ -73,7 +73,7 @@ class Girds16 {
             for y in 0..<4 {
                 var girds: [Gird] = []
                 for x in 0..<4 {
-                    var num = x * 4 + y
+                    let num = x * 4 + y
                     girds.append(self.grids[num])
                 }
                 ret.append(girds)
@@ -82,7 +82,7 @@ class Girds16 {
             for y in 0..<4 {
                 var girds: [Gird] = []
                 for var x = 3; x >= 0; x-- {
-                    var num = x * 4 + y
+                    let num = x * 4 + y
                     girds.append(self.grids[num])
                 }
                 ret.append(girds)
@@ -91,7 +91,7 @@ class Girds16 {
             for x in 0..<4 {
                 var girds: [Gird] = []
                 for y in 0..<4 {
-                    var num = x * 4 + y
+                    let num = x * 4 + y
                     girds.append(self.grids[num])
                 }
                 ret.append(girds)
@@ -100,7 +100,7 @@ class Girds16 {
             for x in 0..<4 {
                 var girds: [Gird] = []
                 for var y = 3; y >= 0; y-- {
-                    var num = x * 4 + y
+                    let num = x * 4 + y
                     girds.append(self.grids[num])
                 }
                 ret.append(girds)
@@ -112,15 +112,16 @@ class Girds16 {
     /**
     如果某个方向有change，说明还可以继续
     
-    :param: dir 方向
+    - parameter dir: 方向
     
-    :returns: 是否可继续
+    - returns: 是否可继续
     */
     private func getCheck(dir: Dir)->Bool {
         clearResult()
-        var girdss = getStack(dir)
-        girdss.map { (girds) -> Void in
-            self.getResultByStack(girds: girds)
+        let girdss = getStack(dir)
+
+        girdss.forEach { (girds) -> () in
+            self.getResultByStack(girds: girds);
         }
         return changes.count > 0
     }
@@ -133,11 +134,11 @@ class Girds16 {
     2、消失的集合
     3、出现的集合
     
-    :param: girds 栈
+    - parameter girds: 栈
     */
     private func getResultByStack(girds a: [Gird]) {
         var low = 0
-        var cnt = a.count
+        let cnt = a.count
         var tmp: Gird! = nil
         for var i = 0; i < cnt; i++ {
             if a[i].num != 0 {
@@ -150,7 +151,7 @@ class Girds16 {
                     if a[i].pos != a[low].pos {
                         changes.append(Change(start: a[i].pos, end: a[low].pos, view: a[i].view))
                     }
-                    var num = a[i].num * 2
+                    let num = a[i].num * 2
                     news.append(New(num: num, pos: a[low].pos))
                     disas.append(Disa(gird: tmp, view: tmp.view))
                     disas.append(Disa(gird: a[i], view: a[i].view))
@@ -171,7 +172,7 @@ class Girds16 {
     */
     private func updateModel() {
         for change in changes {
-            var tmp = grids[change.end]
+            let tmp = grids[change.end]
             grids[change.end] = grids[change.start]
             grids[change.start] = tmp
             grids[change.end].pos = change.end
@@ -182,11 +183,11 @@ class Girds16 {
 //            grids[change.end].pos = change.end
 //            grids[change.start] = Gird(num: 0, pos: change.start)
         }
-        disas.map { (disa) -> Void in
-            disa.gird.num = 0
+        disas.forEach {
+            $0.gird.num = 0;
         }
-        news.map { (new) -> Void in
-            self.grids[new.pos].num = new.num
+        news.forEach {
+            self.grids[$0.pos].num = $0.num
         }
     }
     /**
@@ -194,9 +195,9 @@ class Girds16 {
     */
     private func getAppear() {
         var a: [Bool] = [Bool](count: 16, repeatedValue: false)
-        grids.map { (grid) -> Void in
-            if grid.num != 0 {
-                a[grid.pos] = true
+        grids.forEach {
+            if $0.num != 0 {
+                a[$0.pos] = true
             }
         }
         var b: [Int] = []
@@ -206,7 +207,7 @@ class Girds16 {
             }
         }
         if b.count != 0 {
-            var r = Int(arc4random() % (UInt32)(b.count))
+            let r = Int(arc4random() % (UInt32)(b.count))
             // MARK: 这里随机出现的数字
             news.append(New(num: 2, pos: b[r]))
             grids[b[r]].num = 2
